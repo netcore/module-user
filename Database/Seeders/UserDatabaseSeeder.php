@@ -16,7 +16,6 @@ class UserDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->call(RolesTableSeeder::class);
         $this->call(MenuTableSeeder::class);
     }
 }

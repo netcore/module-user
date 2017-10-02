@@ -8,16 +8,29 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    //@TODO: vai vispār vajag custom modeli veidot tā vietā, lai izmantotu traits un papildinātu default user modeli
+    use \Modules\Permission\Traits\AddUserPermissions;
+
+    //@TODO: varbūt šis jāiekļauj Admin modulī
+    use \Modules\Crud\Traits\CrudifyModel;
+
+    private static $crud = [
+        /*'create'   => [
+            'first_name' => 'text[required]',
+            'last_name'  => 'textarea[required]',
+            'email'      => 'email[required|email]',
+            'password'   => 'password[confirmed]',
+            'test1'      => '[required]',
+            'test2'      => 'text'
+        ]*/
+    ];
+
     /**
      * The attributes that are mass assignable.
-     *
-     * @TODO: vajag uztaisīt smart-migrāciju, kas pielabo tabulas laukus, ja tiek izmantots defaultais
-     * @TODO: name, nevis last_name un first_name;
-     *
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'name', 'email', 'password',
+        'first_name', 'last_name', 'email', 'password',
     ];
 
     /**
@@ -31,33 +44,11 @@ class User extends Authenticatable
 
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class)->withTimestamps();
-    }
-
-
-    /**
-     * @param $name
-     * @return mixed
-     */
-    public function hasRole($name)
-    {
-        if ( !$this->relationLoaded('roles') ) {
-            $this->load('roles');
-        }
-
-        return $this->roles->contains('name', $name);
-    }
-
-    /**
      * @return mixed
      */
     public function isAdmin()
     {
-        return $this->hasRole('admin');
+        return $this->is_admin ? true : false;
     }
 
     /**
@@ -71,9 +62,9 @@ class User extends Authenticatable
     /**
      * @return string
      */
-    public function getFirstnameAttribute()
+    public function setNameAttribute($value)
     {
-        return !empty( $this->first_name ) ? $this->first_name : $this->name;
+        $this->attributes['first_name'] = strtolower($value);
     }
 
     /**

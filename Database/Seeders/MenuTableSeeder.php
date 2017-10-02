@@ -24,22 +24,9 @@ class MenuTableSeeder extends Seeder
                     'icon'   => 'ion-ios-people',
                     'type'   => 'route',
                     'value'  => 'user::user.index',
+                    'active_resolver' => 'user::user.*',
                     'module' => 'User'
-                ],
-                [
-                    'name'   => 'Roles',
-                    'icon'   => 'ion-briefcase',
-                    'type'   => 'route',
-                    'value'  => 'user::role.index',
-                    'module' => 'User'
-                ],
-                [
-                    'name'   => 'Permissions',
-                    'icon'   => 'ion-android-unlock',
-                    'type'   => 'route',
-                    'value'  => 'user::permission.index',
-                    'module' => 'User'
-                ],
+                ]
             ]
         ];
 

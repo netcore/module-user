@@ -7,13 +7,13 @@
 
     <ul class="nav nav-tabs">
         <li class="active">
-            <a href="{{route('user::user.index')}}">Users</a>
+            <a href="{{route('user::users.index')}}">Users</a>
         </li>
         <li>
-            <a href="{{route('user::role.index')}}">Roles</a>
+            <a href="{{route('permission::roles.index')}}">Roles</a>
         </li>
         <li>
-            <a href="{{route('user::permission.index')}}">Permissions</a>
+            <a href="{{route('permission::permissions.index')}}">Permissions</a>
         </li>
     </ul>
     <div class="panel">
@@ -25,12 +25,12 @@
             </tr>
             </thead>
             <tbody>
-                @foreach( $users as $user )
+                @foreach( $rows as $user )
                     <tr>
                         <td>{{$user->fullname}}</td>
                         <td>
-                            <a href="{{route('user::user.show', $user->id)}}" class="btn">Show</a>
-                            <a href="{{route('user::user.edit', $user->id)}}" class="btn">Edit</a>
+                            <a href="{{route('user::users.show', $user->id)}}" class="btn">Show</a>
+                            <a href="{{route('user::users.edit', $user->id)}}" class="btn">Edit</a>
                         </td>
                     </tr>
                 @endforeach
