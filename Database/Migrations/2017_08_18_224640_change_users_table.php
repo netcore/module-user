@@ -24,6 +24,9 @@ class ChangeUsersTable extends Migration
         {
             Schema::table('users', function (Blueprint $table) {
                 $table->renameColumn('name', 'first_name');
+            });
+
+            Schema::table('users', function (Blueprint $table) {
                 $table->string('last_name')->nullable()->after('first_name');
             });
         }
