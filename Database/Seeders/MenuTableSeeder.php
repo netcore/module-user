@@ -23,7 +23,7 @@ class MenuTableSeeder extends Seeder
                     'name'   => 'Users',
                     'icon'   => 'ion-ios-people',
                     'type'   => 'route',
-                    'value'  => 'user::user.index',
+                    'value'  => 'user::users.index',
                     'active_resolver' => 'user::user.*',
                     'module' => 'User'
                 ]
