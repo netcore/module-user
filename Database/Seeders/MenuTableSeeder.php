@@ -25,7 +25,8 @@ class MenuTableSeeder extends Seeder
                     'type'   => 'route',
                     'value'  => 'user::users.index',
                     'active_resolver' => 'user::user.*',
-                    'module' => 'User'
+                    'module' => 'User',
+                    'parameters' => json_encode([])
                 ]
             ]
         ];
