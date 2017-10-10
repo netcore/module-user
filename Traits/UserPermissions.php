@@ -2,14 +2,12 @@
 
 namespace Modules\User\Traits;
 
-
 use Illuminate\Http\Request;
 use Modules\Permission\Models\Role;
 use Nwidart\Modules\Facades\Module;
 
 trait UserPermissions
 {
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */

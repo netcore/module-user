@@ -5,16 +5,6 @@ namespace Modules\User\Traits;
 trait ModuleUser {
 
     /**
-     * Determine if user is admin
-     *
-     * @return bool
-     */
-    public function isAdmin()
-    {
-        return $this->is_admin;
-    }
-
-    /**
      * Set "fullName" attribute on model
      *
      * @return string
