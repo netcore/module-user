@@ -3,13 +3,13 @@
 namespace Modules\User\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Modules\User\Models\Role;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+
     //@TODO: vai vispār vajag custom modeli veidot tā vietā, lai izmantotu traits un papildinātu default user modeli
-    use \Modules\Permission\Traits\AddUserPermissions;
+    use \Modules\User\Traits\UserPermissions;
 
     //@TODO: varbūt šis jāiekļauj Admin modulī
     use \Modules\Crud\Traits\CrudifyModel;
@@ -30,7 +30,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'password',
+        'first_name',
+        'last_name',
+        'email',
+        'password',
     ];
 
     /**
@@ -39,17 +42,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
-
-
-    /**
-     * @return mixed
-     */
-    public function isAdmin()
-    {
-        return $this->is_admin ? true : false;
-    }
 
     /**
      * @return string

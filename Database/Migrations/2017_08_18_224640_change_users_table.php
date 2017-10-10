@@ -6,6 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class ChangeUsersTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -13,15 +14,13 @@ class ChangeUsersTable extends Migration
      */
     public function up()
     {
-        if( !Schema::hasColumn('users', 'is_admin') )
-        {
+        if (!Schema::hasColumn('users', 'is_admin')) {
             Schema::table('users', function (Blueprint $table) {
                 $table->boolean('is_admin')->after('email')->default(0)->index();
             });
         }
 
-        if( Schema::hasColumn('users', 'name') )
-        {
+        if (Schema::hasColumn('users', 'name')) {
             Schema::table('users', function (Blueprint $table) {
                 $table->renameColumn('name', 'first_name');
             });
@@ -39,15 +38,13 @@ class ChangeUsersTable extends Migration
      */
     public function down()
     {
-        if( Schema::hasColumn('users', 'is_admin') )
-        {
+        if (Schema::hasColumn('users', 'is_admin')) {
             Schema::table('users', function (Blueprint $table) {
                 $table->dropColumn('is_admin');
             });
         }
 
-        if( Schema::hasColumn('users', 'first_name') )
-        {
+        if (Schema::hasColumn('users', 'first_name')) {
             Schema::table('users', function (Blueprint $table) {
                 $table->renameColumn('first_name', 'name');
                 $table->dropColumn('last_name');
