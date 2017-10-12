@@ -2,7 +2,6 @@
 
 namespace Modules\User\Http\Controllers\Admin;
 
-use App\User;
 use Illuminate\Routing\Controller;
 use Modules\Crud\Traits\CRUDController;
 
@@ -14,6 +13,7 @@ class UsersController extends Controller
 
     public function __construct()
     {
-        $this->model = new User;
+        $model = config('auth.providers.users.model');
+        $this->model = app($model);
     }
 }
