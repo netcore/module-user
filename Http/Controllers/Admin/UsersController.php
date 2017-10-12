@@ -2,19 +2,18 @@
 
 namespace Modules\User\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\User;
 use Illuminate\Routing\Controller;
+use Modules\Crud\Traits\CRUDController;
 
 class UsersController extends Controller
 {
-    //@TODO: varbūt šis jāiekļauj Admin modulī
-    use \Modules\Crud\Traits\CrudifyController;
+    use CRUDController;
 
     protected $model;
 
     public function __construct()
     {
-        $this->model = app(config('auth.providers.users.model'));
+        $this->model = new User;
     }
 }
