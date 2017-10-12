@@ -8,6 +8,7 @@ use Nwidart\Modules\Facades\Module;
 
 trait UserPermissions
 {
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
@@ -36,13 +37,23 @@ trait UserPermissions
         $module = Module::find('Permission');
         $user = $this;
 
-        if($module && $module->enabled()) {
+        if ($module && $module->enabled()) {
             $currentRoute = $request->route()->getName();
             if ($currentRoute == 'admin::permission.access-denied') {
                 return true;
             }
 
-            $levels = $user->role->levels;
+            $role = $user->role;
+
+            if (!$role && !$user->isAdmin()) {
+                return false;
+            }
+            $levels = $role->levels;
+
+            if (!$levels->count() && !$user->isAdmin()) {
+                return false;
+            }
+            
             foreach ($levels as $level) {
                 foreach ($level->routes as $route) {
                     if ($route->route) {
@@ -63,7 +74,7 @@ trait UserPermissions
                 }
             }
         } else {
-            if($user->isAdmin()) {
+            if ($user->isAdmin()) {
                 return true;
             }
         }
