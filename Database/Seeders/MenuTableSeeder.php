@@ -24,7 +24,7 @@ class MenuTableSeeder extends Seeder
                     'icon'   => 'ion-ios-people',
                     'type'   => 'route',
                     'value'  => 'user::users.index',
-                    'active_resolver' => 'user::user.*',
+                    'active_resolver' => 'user::users.*',
                     'module' => 'User',
                     'parameters' => json_encode([])
                 ]
