@@ -29,6 +29,21 @@ class ChangeUsersTable extends Migration
                 $table->string('last_name')->nullable()->after('first_name');
             });
         }
+
+
+        if (config('netcore.module-user.socialite')) {
+            Schema::create('user_oauth_identities', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('provider');
+                $table->string('provider_id')->index();
+                $table->unsignedInteger('user_id')->index();
+                $table->timestamp('last_login_at')->default(DB::raw('NOW()'));
+                $table->timestamps();
+
+                $table->unique(['provider', 'user_id'], 'user_provider_unique'); // user cannot have two same providers
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            });
+        }
     }
 
     /**
@@ -49,6 +64,9 @@ class ChangeUsersTable extends Migration
                 $table->renameColumn('first_name', 'name');
                 $table->dropColumn('last_name');
             });
+        }
+        if (config('netcore.module-user.socialite')) {
+            Schema::dropIfExists('user_oauth_identities');
         }
     }
 }

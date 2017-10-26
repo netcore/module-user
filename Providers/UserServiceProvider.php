@@ -2,6 +2,7 @@
 
 namespace Modules\User\Providers;
 
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
 
@@ -34,7 +35,9 @@ class UserServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+//        $this->app->register(\Laravel\Socialite\SocialiteServiceProvider::class);
+//
+//        AliasLoader::getInstance()->alias('Socialite', \Laravel\Socialite\Facades\Socialite::class);
     }
 
     /**
@@ -45,10 +48,10 @@ class UserServiceProvider extends ServiceProvider
     protected function registerConfig()
     {
         $this->publishes([
-            __DIR__.'/../Config/config.php' => config_path('user.php'),
+            __DIR__.'/../Config/config.php' => config_path('netcore/module-user.php'),
         ], 'config');
         $this->mergeConfigFrom(
-            __DIR__.'/../Config/config.php', 'user'
+            __DIR__.'/../Config/config.php', 'netcore/module-user'
         );
     }
 
