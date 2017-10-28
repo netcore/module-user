@@ -55,7 +55,7 @@ class UserDatabaseSeeder extends Seeder
                             [
                                 'group' => 'oauth',
                                 'key'   => $provider . $key,
-                                'name'  => ucfirst($provider) . ' ' . str_replace('_', '', $key),
+                                'name'  => ucfirst($provider) . ' ' . str_replace('_', ' ', $key),
                                 'value' => '',
                                 'type'  => 'text', // Available types: text, select, checkbox, file
                             ]

@@ -2,7 +2,6 @@
 
 namespace Modules\User\Traits;
 
-use App\User;
 use Exception;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -36,79 +35,9 @@ trait ControllerSocialite
     {
         $this->providerGate($provider);
 
-        // Set redirect URL on the fly (must be absolute)
-        config()->set(
-            'services.' . $provider . '.client_id',
-            setting()->get($provider . '_client_id')
-        );
-        config()->set(
-            'services.' . $provider . '.client_secret',
-            setting()->get($provider . '_client_secret')
-        );
-        config()->set(
-            'services.' . $provider . '.redirect',
-            url('/login/' . $provider . '/callback')
-        );
-
         return Socialite::driver($provider)->redirect();
     }
 
-    /**
-     * Handle provider callback
-     *
-     * @param string $provider
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function providerCallback(string $provider)
-    {
-        $this->providerGate($provider);
-
-        // Set redirect URL on the fly (must be absolute)
-        config()->set(
-            'services.' . $provider . '.redirect',
-            url('/login/' . $provider . '/callback')
-        );
-
-        try {
-            // Get the provider user
-            $providerUser = Socialite::driver($provider)->fields([
-                'name',
-                'first_name',
-                'last_name',
-                'email'
-            ])->user();
-
-            // Find out if user with given email is registered
-            $systemUser = User::whereEmail($providerUser->getEmail())->first();
-
-            if($systemUser) {
-                $identity = $systemUser->oauthIdentities()->firstOrCreate([
-                    'provider' => $provider,
-                    'provider_id' => $providerUser->getId()
-                ]);
-
-                // Update last login time
-                $identity->setLastLoginTime();
-
-                auth()->login($systemUser);
-
-                return $this->redirectAfterLogin();
-            }
-
-            // User with provider provided email is not found
-            // Put socialite user to session and then redirect to register page to finish registration
-
-            session()->put('socialRegister', [
-                'provider' => $provider,
-                'providerUser' => $providerUser
-            ]);
-
-            return $this->redirectToRegisterPage();
-
-        } catch (Exception $exception) {
-            return $this->handleBadProviderResponse($exception, $provider);
-        }
-    }
 
 
     /**
@@ -122,6 +51,20 @@ trait ControllerSocialite
         if (!in_array($provider, $this->getProviders(), true)) {
             abort(404);
         }
+
+        // Set redirect URL on the fly (must be absolute)
+        config()->set(
+            'services.' . $provider . '.client_id',
+            setting()->get($provider . '_client_id')
+        );
+        config()->set(
+            'services.' . $provider . '.client_secret',
+            setting()->get($provider . '_client_secret')
+        );
+        config()->set(
+            'services.' . $provider . '.redirect',
+            url('/login/' . $provider . '/callback')
+        );
     }
 
     /**
