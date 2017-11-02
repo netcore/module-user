@@ -56,8 +56,7 @@ class UserDatabaseSeeder extends Seeder
                                 'group' => 'oauth',
                                 'key'   => $provider . $key,
                                 'name'  => ucfirst($provider) . ' ' . str_replace('_', ' ', $key),
-                                'value' => '',
-                                'type'  => 'text', // Available types: text, select, checkbox, file
+                                'type'  => 'text',
                             ]
                         ];
                     }
@@ -66,8 +65,16 @@ class UserDatabaseSeeder extends Seeder
             }
         }
 
-        foreach ($settings as $setting) {
-            Setting::updateOrCreate($setting[0], $setting[1]);
+        foreach ($settings as $data) {
+            $setting = Setting::updateOrCreate($data[0], $data[1]);
+
+            $translations = [];
+            foreach (\Netcore\Translator\Helpers\TransHelper::getAllLanguages() as $language) {
+                $translations[$language->iso_code] = [
+                    'value' => ''
+                ];
+            }
+            $setting->storeTranslations($translations);
         }
 
         cache()->flush();
