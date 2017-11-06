@@ -1,13 +1,19 @@
 <?php
 
 return [
-    'socialite' => true,
+    'socialite' => false,
 
     'socialite-providers' => [
-//        'google' => true,
-        'facebook' => true,
-        'twitter'  => true,
-        'linkedin'  => true,
-//        'github' => true,
+        'google'   => false,
+        'facebook' => false,
+        'twitter'  => false,
+        'linkedin' => false,
+        'github'   => false,
+    ],
+
+    'allow' => [
+        'delete' => true,
+        'create' => true,
+        'view'   => false,
     ]
 ];
