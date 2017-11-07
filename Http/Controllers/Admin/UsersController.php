@@ -20,6 +20,11 @@ class UsersController extends Controller
 
     public function __construct()
     {
+        $this->config = [
+            'allow-delete' => config('netcore.module-user.allow.delete'),
+            'allow-create' => config('netcore.module-user.allow.create'),
+            'allow-view'   => config('netcore.module-user.allow.view'),
+        ];
         $model = config('auth.providers.users.model');
         $this->model = app($model);
     }
