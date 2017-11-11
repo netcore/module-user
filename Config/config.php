@@ -3,6 +3,8 @@
 return [
     'socialite' => false,
 
+    'auth-controller' => '\Auth\AuthController',
+
     'socialite-providers' => [
         'google'   => false,
         'facebook' => false,
