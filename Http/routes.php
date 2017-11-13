@@ -14,11 +14,11 @@ Route::group(['middleware' => ['guest', 'web']], function () {
         $controller = config('netcore.module-user.auth-controller');
 
         Route::get('/login/{provider}/callback', [
-            'uses' => '\App\Http\Controllers' . $controller . '@providerCallback'
+            'uses' => $controller . '@providerCallback'
         ]);
 
         Route::get('/login/{provider}', [
-            'uses' => '\App\Http\Controllers' . $controller . '@providerRedirect',
+            'uses' => $controller . '@providerRedirect',
             'as'   => 'login.social'
         ]);
     }
