@@ -35,11 +35,7 @@ trait ControllerSocialite
     {
         $this->providerGate($provider);
 
-        return Socialite::driver($provider)
-                            ->fields([
-                                'first_name', 'last_name'
-                            ])
-                            ->redirect();
+        return Socialite::driver($provider)->redirect();
     }
 
 
