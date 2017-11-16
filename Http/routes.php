@@ -6,6 +6,13 @@ Route::group([
     'middleware' => ['web', 'auth.admin'],
     'namespace'  => 'Modules\User\Http\Controllers\Admin'
 ], function () {
+
+    // Datatables pagination
+    Route::get('users/paginate', [
+        'uses' => 'UsersController@paginate',
+        'as'   => 'users.paginate'
+    ]);
+
     Route::resource('users', 'UsersController');
 });
 
