@@ -3,6 +3,8 @@
 return [
     'socialite' => false,
 
+    'auth-controller' => null, // Auth controller class path (::class)
+
     'socialite-providers' => [
         'google'   => false,
         'facebook' => false,

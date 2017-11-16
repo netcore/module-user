@@ -17,12 +17,17 @@ Route::group([
 });
 
 Route::group(['middleware' => ['guest', 'web']], function () {
-    Route::get('/login/{provider}/callback', [
-        'uses' => '\App\Http\Controllers\Auth\AuthController@providerCallback'
-    ]);
+    if (config('netcore.module-user.socialite')) {
+        $controller = config('netcore.module-user.auth-controller');
 
-    Route::get('/login/{provider}', [
-        'uses' => '\App\Http\Controllers\Auth\AuthController@providerRedirect',
-        'as'   => 'login.social'
-    ]);
+        Route::get('/login/{provider}/callback', [
+            'uses' => $controller . '@providerCallback'
+        ]);
+
+        Route::get('/login/{provider}', [
+            'uses' => $controller . '@providerRedirect',
+            'as'   => 'login.social'
+        ]);
+    }
+
 });
