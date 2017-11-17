@@ -15,7 +15,8 @@
     },
     "require": {
         "php": ">=7.0",
-        "yajra/laravel-datatables-oracle": "~8.0"
+        "yajra/laravel-datatables-oracle": "~8.0",
+        "maatwebsite/excel": "~2.1.0"
     },
     "minimum-stability": "dev"
 }

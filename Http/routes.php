@@ -13,6 +13,15 @@ Route::group([
         'as'   => 'users.paginate'
     ]);
 
+    Route::get('users/export', [
+        'uses' => 'UsersController@getExport',
+        'as'   => 'users.export'
+    ]);
+
+    Route::post('users/export', [
+        'uses' => 'UsersController@postExport'
+    ]);
+
     Route::resource('users', 'UsersController');
 });
 

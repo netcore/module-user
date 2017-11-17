@@ -1,7 +1,16 @@
 @extends('crud::layouts.master')
 
 @section('crudName', 'List all')
-@section('crudPanelName', 'All results from resource')
+@section('crudPanelName')
+    <span class="panel-title">All results from resource</span>
+    <div class="panel-heading-btn">
+        @if(isset($config) && array_get($config, 'allow-export'))
+            <a href="{{ route('user::users.export') }}" class="btn btn-xs btn-primary">
+                <i class="fa fa-file-excel-o"></i> Export users
+            </a>
+        @endif
+    </div>
+@endsection
 
 @section('crud')
     <div class="table-primary">
@@ -38,10 +47,16 @@
         @endforeach
 
         columns.push(
-            { data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center vertical-align-middle width-150'}
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false,
+                className: 'text-center vertical-align-middle width-150'
+            }
         );
 
-        (function() {
+        (function () {
             $('.datatable').dataTable({
                 columnDefs: [
                     {orderable: false, targets: -1}
@@ -53,7 +68,7 @@
                 columns: columns
             });
 
-            $('.dataTables_wrapper .dataTables_filter input').attr('placeholder', 'Search...');
+            $('.dataTables_wrapper .dataTables_filter input').attr('placeholder', 'Find user ...');
         })();
     </script>
 @endsection

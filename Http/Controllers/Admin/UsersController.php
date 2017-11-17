@@ -4,11 +4,12 @@ namespace Modules\User\Http\Controllers\Admin;
 
 use Illuminate\Routing\Controller;
 use Modules\Crud\Traits\CRUDController;
+use Modules\User\Traits\AdminExportTrait;
 use Modules\User\Traits\AdminUsersPagination;
 
 class UsersController extends Controller
 {
-    use CRUDController, AdminUsersPagination;
+    use CRUDController, AdminUsersPagination, AdminExportTrait;
 
     /**
      * User model.
@@ -26,6 +27,7 @@ class UsersController extends Controller
         'allow-delete' => false,
         'allow-create' => false,
         'allow-view'   => false,
+        'allow-export' => false,
     ];
 
     /**
@@ -33,11 +35,12 @@ class UsersController extends Controller
      */
     public function __construct()
     {
-        $this->config = [
-            'allow-delete' => config('netcore.module-user.allow.delete'),
-            'allow-create' => config('netcore.module-user.allow.create'),
-            'allow-view'   => config('netcore.module-user.allow.view'),
-        ];
+        // Prepend keys with 'allow-' keyword.
+        $fromConfig = collect(config('netcore.module-user.allow', []))->keyBy(function ($value, $key) {
+            return 'allow-' . $key;
+        })->toArray();
+
+        $this->config = array_merge($this->config, $fromConfig);
 
         $this->model = app(
             config('auth.providers.users.model')
@@ -53,7 +56,7 @@ class UsersController extends Controller
     {
         return $this->view('user::users.index', [
             'model'  => $this->getModel(),
-            'config' => $this->getConfig()
+            'config' => $this->getConfig(),
         ]);
     }
 }
