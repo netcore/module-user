@@ -33,10 +33,18 @@ class MenuTableSeeder extends Seeder
             ]
         ];
 
-        foreach ($menus as $name => $items) {
+        foreach ($menus as $key => $items) {
             $menu = Menu::firstOrCreate([
-                'name' => $name
+                'key' => $key
             ]);
+
+            $translations = [];
+            foreach (TransHelper::getAllLanguages() as $language) {
+                $translations[$language->iso_code] = [
+                    'name' => ucwords(preg_replace(array('/(?<=[^A-Z])([A-Z])/', '/(?<=[^0-9])([0-9])/'), ' $0', $key))
+                ];
+            }
+            $menu->updateTranslations($translations);
 
             foreach ($items as $item) {
                 $row = $menu->items()->firstOrCreate(array_except($item, ['name', 'value', 'parameters']));
