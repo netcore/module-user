@@ -9,20 +9,9 @@ trait ModuleUser {
      *
      * @return string
      */
-    public function getFullnameAttribute()
+    public function getFullNameAttribute()
     {
         return $this->name ?: $this->first_name . ' ' . $this->last_name;
-    }
-
-    /**
-     * Set "name" attribute on model
-     *
-     * @param $value
-     * @return string
-     */
-    public function setNameAttribute($value)
-    {
-        $this->attributes['first_name'] = strtolower($value);
     }
 
     /**

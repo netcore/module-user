@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Setting\Models\Setting;
 use Nwidart\Modules\Facades\Module;
+use Schema;
 
 class UserDatabaseSeeder extends Seeder
 {
@@ -22,16 +23,18 @@ class UserDatabaseSeeder extends Seeder
         $this->call(MenuTableSeeder::class);
 
         $userModel = config('auth.providers.users.model');
-        $user = $userModel::firstOrCreate(
-            [
-                'email' => 'admin@admin.com'
-            ],
-            [
-                'email'      => 'admin@admin.com',
-                'first_name' => 'Test Admin',
-                'password'   => 'admin',
-                'is_admin'   => 1,
-            ]);
+        $tableName = app($userModel)->getTable();
+
+        $nameColumn = Schema::hasColumn($tableName, 'name') ? 'name' : 'first_name';
+
+        $data = [
+            'email'     => 'admin@admin.com',
+            $nameColumn => 'Test Admin',
+            'password'  => 'admin',
+            'is_admin'  => 1,
+        ];
+
+        $user = $userModel::firstOrCreate(array_only($data, 'email'), $data);
 
         $module = Module::find('Permission');
 
@@ -39,7 +42,9 @@ class UserDatabaseSeeder extends Seeder
             $user->role_id = 1;
             $user->save();
         }
+
         $settings = [];
+
         if (config('netcore.module-user.socialite')) {
             $providers = config('netcore.module-user.socialite-providers');
             $keys = ['_client_id', '_client_secret'];
@@ -57,7 +62,7 @@ class UserDatabaseSeeder extends Seeder
                                 'key'   => $provider . $key,
                                 'name'  => ucfirst($provider) . ' ' . str_replace('_', ' ', $key),
                                 'type'  => 'text',
-                            ]
+                            ],
                         ];
                     }
 
@@ -71,7 +76,7 @@ class UserDatabaseSeeder extends Seeder
             $translations = [];
             foreach (\Netcore\Translator\Helpers\TransHelper::getAllLanguages() as $language) {
                 $translations[$language->iso_code] = [
-                    'value' => ''
+                    'value' => '',
                 ];
             }
             $setting->storeTranslations($translations);
