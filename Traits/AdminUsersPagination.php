@@ -18,7 +18,7 @@ trait AdminUsersPagination
         $presenter = $presenter && class_exists($presenter) ? app($presenter) : null;
 
         // Eager-load relations
-        if (property_exists($presenter, 'with')) {
+        if ($presenter && property_exists($presenter, 'with')) {
             $query = $model->with($presenter->with);
         } else {
             $query = $model->query();
