@@ -182,4 +182,55 @@ And then you need to implement following method in your related model
     }
 ```
 
+### Datatable configuration
 
+- By default columns scanned by CRUD module will be shown. 
+- You can configure necessary columns, modify titles and modify values as well.
+
+- Create presenter somewhere, for example in app/Presenters/AdminUsersDatatablePresenter.php
+- Example file:
+```php 
+    <?php
+    
+    namespace App\Presenters;
+    
+    class AdminUsersDatatablePresenter
+    {
+        /**
+         * Columns to show.
+         *
+         * @var array
+         */
+        public $showColumns = [
+            'is_active'         => 'Is active?',
+            'name'              => 'Name',
+            'email'             => 'E-mail address',
+            'phone'             => 'Phone',
+            'language_iso_code' => 'Country',
+        ];
+    
+        /** ---------- Modifiers ---------- */
+    
+        /**
+         * is_active column modifier.
+         *
+         * @param $user
+         * @return string
+         */
+        public function isActive($user): string
+        {
+            return $user->is_active ? 'Yes' : 'No';
+        }
+    
+        /**
+         * language_iso_code column value modifier.
+         *
+         * @param $user
+         * @return string
+         */
+        public function languageIsoCode($user): string
+        {
+            return strtoupper($user->langauge_iso_code);
+        }
+    }
+```

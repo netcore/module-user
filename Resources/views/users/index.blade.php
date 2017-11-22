@@ -17,10 +17,8 @@
         <table class="table table-bordered datatable">
             <thead>
                 <tr>
-                    @foreach($model->hideFields(['password'])->getFields() as $field => $type )
-                        @if($type != 'textarea' )
-                            <th>{{ title_case(str_replace('_', ' ', $field)) }}</th>
-                        @endif
+                    @foreach($columns as $field => $title)
+                        <th>{{ $title }}</th>
                     @endforeach
                     <th>Actions</th>
                 </tr>
@@ -35,15 +33,13 @@
         var columns = [];
 
         // Build columns dynamically
-        @foreach($model->hideFields(['password'])->getFields() as $field => $type )
-            @if($type != 'textarea')
-                columns.push({
-                    data: '{{ $field }}',
-                    name: '{{ $field }}',
-                    orderable: true,
-                    searchable: true
-                });
-            @endif
+        @foreach($columns as $field => $type )
+            columns.push({
+                data: '{{ $field }}',
+                name: '{{ $field }}',
+                orderable: true,
+                searchable: true
+            });
         @endforeach
 
         columns.push(
