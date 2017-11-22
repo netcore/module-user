@@ -8,7 +8,7 @@ trait ReplaceableAttributes {
      *
      * @return array
      */
-    public function getReplacaeble(): array
+    public function getReplaceable(): array
     {
         $attributes     = $this->replaceable       ?? [];
         $prefix         = $this->replaceablePrefix ?? '';
