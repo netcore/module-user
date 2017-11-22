@@ -18,7 +18,7 @@
             <thead>
                 <tr>
                     @foreach($columns as $field => $title)
-                        <th>{{ $title }}</th>
+                        <th>{{ is_array($title) ? array_get($title, 'title', 'N/A') : $title }}</th>
                     @endforeach
                     <th>Actions</th>
                 </tr>
@@ -33,30 +33,31 @@
         var columns = [];
 
         // Build columns dynamically
-        @foreach($columns as $field => $type )
+        @foreach($columns as $field => $name)
+            @php
+                // For some reason pagination is not working if we pass 1/0 instead of true/false..
+                $isOrderable = is_array($name) ? (array_get($name, 'orderable', true) ? 'true' : 'false') : 'true';
+                $isSearchable = is_array($name) ? (array_get($name, 'searchable', true) ? 'true' : 'false') : 'true';
+            @endphp
+
             columns.push({
-                data: '{{ $field }}',
-                name: '{{ $field }}',
-                orderable: true,
-                searchable: true
+                data: '{{ is_array($name) ? array_get($name, 'data', $field) : $field }}',
+                name: '{{ is_array($name) ? array_get($name, 'name', $field) : $field }}',
+                orderable: {{ $isOrderable }},
+                searchable: {{ $isSearchable }}
             });
         @endforeach
 
-        columns.push(
-            {
-                data: 'action',
-                name: 'action',
-                orderable: false,
-                searchable: false,
-                className: 'text-center vertical-align-middle width-150'
-            }
-        );
+        columns.push({
+            data: 'action',
+            name: 'action',
+            orderable: false,
+            searchable: false,
+            className: 'text-center vertical-align-middle width-150'
+        });
 
         (function () {
             $('.datatable').dataTable({
-                columnDefs: [
-                    {orderable: false, targets: -1}
-                ],
                 processing: true,
                 serverSide: true,
                 ajax: '{{ route('user::users.paginate') }}',

@@ -13,15 +13,23 @@ trait AdminUsersPagination
      */
     public function paginate()
     {
-        /**
-         * @var $datatable \Yajra\DataTables\EloquentDataTable
-         */
-        $datatable = DataTables::of(
-            $this->model->query()
-        );
+        $model = $this->model;
+        $presenter = config('netcore.module-user.datatable.presenter');
+        $presenter = $presenter && class_exists($presenter) ? app($presenter) : null;
+
+        // Eager-load relations
+        if (property_exists($presenter, 'with')) {
+            $query = $model->with($presenter->with);
+        } else {
+            $query = $model->query();
+        }
+
+        $datatable = DataTables::of($query);
 
         // Presenter modifiers
-        $this->modifyDatatableColumns($datatable);
+        if ($presenter) {
+            $this->modifyDatatableColumns($datatable, $presenter);
+        }
 
         // Add action column
         $datatable->addColumn('action', function ($row) {
@@ -40,18 +48,11 @@ trait AdminUsersPagination
      * Modify datatable columns.
      *
      * @param $datatable
+     * @param $presenter
      * @return void
      */
-    private function modifyDatatableColumns(&$datatable)
+    private function modifyDatatableColumns(&$datatable, $presenter)
     {
-        $presenter = config('netcore.module-user.datatable.presenter');
-
-        if (!$presenter || !class_exists($presenter)) {
-            return;
-        }
-
-        $presenter = app($presenter);
-
         foreach ($this->getDatatableColumns() as $name => $title) {
             $method = camel_case($name);
 
