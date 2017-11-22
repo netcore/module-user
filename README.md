@@ -202,11 +202,16 @@ And then you need to implement following method in your related model
          * @var array
          */
         public $showColumns = [
+            'created_at'        => 'Registerted at',
             'is_active'         => 'Is active?',
             'name'              => 'Name',
             'email'             => 'E-mail address',
             'phone'             => 'Phone',
-            'language_iso_code' => 'Country',
+            'language_iso_code' => [
+                'title' => 'Country', // column title
+                'name'  => 'language.title', // for query
+                'data'  => 'language.title', // for display data
+            ],
         ];
     
         /** ---------- Modifiers ---------- */
@@ -221,16 +226,16 @@ And then you need to implement following method in your related model
         {
             return $user->is_active ? 'Yes' : 'No';
         }
-    
+        
         /**
-         * language_iso_code column value modifier.
-         *
+         * created_at column modifier.
+         * 
          * @param $user
          * @return string
          */
-        public function languageIsoCode($user): string
+        public function createdAt($user): string 
         {
-            return strtoupper($user->langauge_iso_code);
+            return $user->created_at->format('d.m.Y');
         }
     }
 ```
