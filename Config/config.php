@@ -20,6 +20,14 @@ return [
         'export' => false,
     ],
 
+    /**
+     * Admin datatable config.
+     */
+    'datatable' => [
+        // Presenter is used to modify datatable column titles and values if necessary.
+        'presenter' => \App\Presenters\AdminUsersDatatablePresenter::class,
+    ],
+
     // Example export options config
     'export_options' => [
         // Many records.

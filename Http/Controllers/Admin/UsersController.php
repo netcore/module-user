@@ -55,8 +55,37 @@ class UsersController extends Controller
     public function index()
     {
         return $this->view('user::users.index', [
-            'model'  => $this->getModel(),
-            'config' => $this->getConfig(),
+            'model'   => $this->getModel(),
+            'config'  => $this->getConfig(),
+            'columns' => $this->getDatatableColumns(),
         ]);
+    }
+
+    /**
+     * Get datatable columns.
+     *
+     * @return array
+     */
+    protected function getDatatableColumns(): array
+    {
+        $columns = [];
+        $presenter = config('netcore.module-user.datatable.presenter');
+
+        if (class_exists($presenter)) {
+            $columnsToShow = object_get(app($presenter), 'showColumns');
+
+            if ($columnsToShow && is_array($columnsToShow)) {
+                return $columnsToShow;
+            }
+        }
+
+        // CRUD module fallback if presenter doesn't exist.
+        foreach ($this->model->hideFields(['password'])->getFields() as $field => $type) {
+            if ($type !== 'textarea') {
+                $columns[$field] = title_case(str_replace('_', ' ', $field));
+            }
+        }
+
+        return $columns;
     }
 }

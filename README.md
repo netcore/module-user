@@ -43,6 +43,7 @@ You should be good to go.
         'delete' => false,
         'create' => true,
         'view'   => false,
+        'export' => false,
     ]
 ...
 ```
@@ -72,4 +73,169 @@ public function providerCallback(string $provider)
         
 ```
 
+### Exporting users
 
+- First of all you need to configure export filters, add export data formatter to related model (if option with relation is required)
+- At module-user.php config file
+
+```php 
+
+    'export_options' => [
+        // Users only
+        [
+            'title'   => 'Users only',
+            // Filters that can be appied to exportable data
+            'filters' => [
+                [
+                    'name'     => 'Register date from:', // Filter name
+                    'key'      => 'created_at_from', // Filter key (for html input - must be unique) 
+                    'type'     => 'date', // Field type
+                    'field'    => 'created_at', // Column name in database
+                    'operator' => '>=', // SQL select operator
+                    'required' => false, // Is required?
+                ],
+                [
+                    'name'     => 'Register date to:',
+                    'key'      => 'created_at_to',
+                    'type'     => 'date',
+                    'field'    => 'created_at',
+                    'operator' => '<=',
+                    'required' => false,
+                ],
+                [
+                    'name'           => 'Pick:',
+                    'key'            => 'is_active',
+                    'type'           => 'select',
+                    'field'          => 'is_active',
+                    'operator'       => '=',
+                    'required'       => false,
+                    'select_options' => [
+                        null => 'Both',
+                        0    => 'Inactive users',
+                        1    => 'Active users',
+                    ],
+                ],
+            ],
+        ],
+        // User with some relation/-s
+        [
+            'title'        => 'User with classifieds',
+            'find_by'      => 'id:fullName', // format - column:userRepresentableData
+            'withRelation' => [
+                'name'    => 'classifieds', // relation name
+                // Relation filters
+                'filters' => [
+                    [
+                        'name'           => 'Of type:',
+                        'key'            => 'of_type',
+                        'type'           => 'select',
+                        'field'          => 'type',
+                        'operator'       => '=',
+                        'required'       => false,
+                        'select_options' => [
+                            null   => 'All',
+                            'buy'  => 'Buy',
+                            'sell' => 'Sell',
+                            'rent' => 'Rent',
+                        ],
+                    ],
+                    [
+                        'name'           => 'From date:',
+                        'key'            => 'created_at_from',
+                        'type'           => 'date',
+                        'field'          => 'created_at',
+                        'operator'       => '>=',
+                        'required'       => false,
+                    ],
+                    [
+                        'name'           => 'To date:',
+                        'key'            => 'created_at_to',
+                        'type'           => 'date',
+                        'field'          => 'created_at',
+                        'operator'       => '<=',
+                        'required'       => false,
+                    ],
+                ],
+            ],
+        ],
+    ],
+```
+
+And then you need to implement following method in your related model
+```php 
+    /**
+     * Export config
+     *
+     * @return array
+     */
+    public function getExportableFieldsMap(): array
+    {
+        return [
+            // Column name => Value
+            'City' => $this->city->name ?? null,
+            'Language' => $this->language_iso_code,
+            'Type' => $this->type,
+            'Name' => $this->name,
+            'Price' => $this->price,
+            ...
+        ];
+    }
+```
+
+### Datatable configuration
+
+- By default columns scanned by CRUD module will be shown. 
+- You can configure necessary columns, modify titles and modify values as well.
+
+- Create presenter somewhere, for example in app/Presenters/AdminUsersDatatablePresenter.php
+- Example file:
+```php 
+    <?php
+    
+    namespace App\Presenters;
+    
+    class AdminUsersDatatablePresenter
+    {
+        /**
+         * Columns to show.
+         *
+         * @var array
+         */
+        public $showColumns = [
+            'created_at'        => 'Registerted at',
+            'is_active'         => 'Is active?',
+            'name'              => 'Name',
+            'email'             => 'E-mail address',
+            'phone'             => 'Phone',
+            'language_iso_code' => [
+                'title' => 'Country', // column title
+                'name'  => 'language.title', // for query
+                'data'  => 'language.title', // for display data
+            ],
+        ];
+    
+        /** ---------- Modifiers ---------- */
+    
+        /**
+         * is_active column modifier.
+         *
+         * @param $user
+         * @return string
+         */
+        public function isActive($user): string
+        {
+            return $user->is_active ? 'Yes' : 'No';
+        }
+        
+        /**
+         * created_at column modifier.
+         * 
+         * @param $user
+         * @return string
+         */
+        public function createdAt($user): string 
+        {
+            return $user->created_at->format('d.m.Y');
+        }
+    }
+```
