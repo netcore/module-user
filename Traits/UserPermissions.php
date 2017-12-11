@@ -10,10 +10,18 @@ trait UserPermissions
 {
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne|object
      */
     public function role()
     {
+        $module = Module::find('Permission');
+
+        if (! $module || !$module->enabled()) {
+            return (object)[
+                'levels' => collect()
+            ];
+        }
+
         return $this->belongsTo(Role::class);
     }
 
