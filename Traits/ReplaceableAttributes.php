@@ -16,7 +16,7 @@ trait ReplaceableAttributes {
 
         foreach ($attributes as $attribute)
         {
-            $replaceable[$prefix . $attribute] = $this[$attribute] ?? null;
+            $replaceable[strtoupper($prefix . $attribute)] = $this[$attribute] ?? null;
         }
 
         return $replaceable;
