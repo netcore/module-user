@@ -25,7 +25,10 @@ return [
      */
     'datatable' => [
         // Presenter is used to modify datatable column titles and values if necessary.
-        'presenter' => \App\Presenters\AdminUsersDatatablePresenter::class,
+        'presenter'     => \App\Presenters\AdminUsersDatatablePresenter::class,
+
+        // View from which user actions <td> is imported
+        'actions_td'    => 'user::users.tds.actions'
     ],
 
     // Example export options config
