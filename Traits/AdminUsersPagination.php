@@ -32,10 +32,10 @@ trait AdminUsersPagination
         }
 
         $actionsTd = config('netcore.module-user.datatable.actions_td');
-
+        $config = $this->getConfig();
         // Add action column
-        $datatable->addColumn('action', function ($row) use ($actionsTd) {
-            return view($actionsTd ?? 'user::users.tds.actions', compact('row'))->render();
+        $datatable->addColumn('action', function ($row) use ($actionsTd, $config) {
+            return view($actionsTd ?? 'user::users.tds.actions', compact('row', 'config'))->render();
         });
 
         // Don't escape action column as it contains HTML code.
