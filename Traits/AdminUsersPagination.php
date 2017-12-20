@@ -38,10 +38,12 @@ trait AdminUsersPagination
             return view($actionsTd ?? 'user::users.tds.actions', compact('row', 'config'))->render();
         });
 
-        // Don't escape action column as it contains HTML code.
-        $datatable->rawColumns([
+        // Set columns that shouldn't be escaped.
+        $rawColumns = (array)property_exists($presenter, 'rawColumns') ? $presenter->rawColumns : [];
+        
+        $datatable->rawColumns(array_merge([
             'action',
-        ]);
+        ], $rawColumns));
 
         return $datatable->make(true);
     }
