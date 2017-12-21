@@ -16,6 +16,7 @@ trait AdminUsersPagination
         $model = $this->model;
         $presenter = config('netcore.module-user.datatable.presenter');
         $presenter = $presenter && class_exists($presenter) ? app($presenter) : null;
+        $rawColumns = [];
 
         // Eager-load relations
         if ($presenter && property_exists($presenter, 'with')) {
@@ -29,6 +30,9 @@ trait AdminUsersPagination
         // Presenter modifiers
         if ($presenter) {
             $this->modifyDatatableColumns($datatable, $presenter);
+
+            // Set columns that shouldn't be escaped.
+            $rawColumns = (array)property_exists($presenter, 'rawColumns') ? $presenter->rawColumns : [];
         }
 
         $actionsTd = config('netcore.module-user.datatable.actions_td');
@@ -38,9 +42,6 @@ trait AdminUsersPagination
             return view($actionsTd ?? 'user::users.tds.actions', compact('row', 'config'))->render();
         });
 
-        // Set columns that shouldn't be escaped.
-        $rawColumns = (array)property_exists($presenter, 'rawColumns') ? $presenter->rawColumns : [];
-        
         $datatable->rawColumns(array_merge([
             'action',
         ], $rawColumns));
