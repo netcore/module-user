@@ -54,6 +54,9 @@ class UsersController extends Controller
      */
     public function index()
     {
+        session()->put('crud-active-model', get_class($this->getModel()));
+        session()->put('crud-route-name', request()->route()->getName());
+
         return $this->view('user::users.index', [
             'model'   => $this->getModel(),
             'config'  => $this->getConfig(),
