@@ -16,8 +16,8 @@ trait ControllerSocialite
     {
         $providers = [];
 
-        foreach(config('netcore.module-user.socialite-providers') as $provider => $state) {
-            if($state) {
+        foreach (config('netcore.module-user.socialite-providers') as $provider => $state) {
+            if ($state) {
                 $providers[] = $provider;
             }
         }
@@ -38,8 +38,6 @@ trait ControllerSocialite
         return Socialite::driver($provider)->redirect();
     }
 
-
-
     /**
      * Check for provider existence
      *
@@ -53,25 +51,16 @@ trait ControllerSocialite
         }
 
         // Set redirect URL on the fly (must be absolute)
-        config()->set(
-            'services.' . $provider . '.client_id',
-            setting()->get($provider . '_client_id')
-        );
-        config()->set(
-            'services.' . $provider . '.client_secret',
-            setting()->get($provider . '_client_secret')
-        );
-        config()->set(
-            'services.' . $provider . '.redirect',
-            url('/login/' . $provider . '/callback')
-        );
+        config()->set('services.' . $provider . '.client_id', setting()->get('oauth.' . $provider . '_client_id'));
+        config()->set('services.' . $provider . '.client_secret', setting()->get('oauth.' . $provider . '_client_secret'));
+        config()->set('services.' . $provider . '.redirect', url('/login/' . $provider . '/callback'));
     }
 
     /**
      * Bad response handler
      *
      * @param Exception $exception
-     * @param string $provider
+     * @param string    $provider
      * @return \Illuminate\Http\RedirectResponse
      */
     private function handleBadProviderResponse(Exception $exception, string $provider)
@@ -81,9 +70,7 @@ trait ControllerSocialite
         if ($attempts > 5) {
             session()->forget($provider . '-attempts');
 
-            return redirect()->route('login')->withErrors(
-                trans('login.unexpected_provider_error')
-            );
+            return redirect()->route('login')->withErrors(trans('login.unexpected_provider_error'));
         }
 
         $attempts++;

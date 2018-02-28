@@ -52,6 +52,7 @@ class UserOauthIdentity extends Model
 
     /**
      * UserOauthIdentity constructor.
+     *
      * @param array $attributes
      */
     public function __construct($attributes = [])

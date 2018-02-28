@@ -61,7 +61,7 @@ trait AdminUsersPagination
         foreach ($this->getDatatableColumns() as $name => $title) {
             $method = camel_case($name);
 
-            if (! method_exists($presenter, $method)) {
+            if (!method_exists($presenter, $method)) {
                 continue;
             }
 

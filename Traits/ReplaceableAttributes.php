@@ -1,7 +1,9 @@
 <?php
+
 namespace Modules\User\Traits;
 
-trait ReplaceableAttributes {
+trait ReplaceableAttributes
+{
 
     /**
      * Returns replaceable data
@@ -10,16 +12,15 @@ trait ReplaceableAttributes {
      */
     public function getReplaceable(): array
     {
-        $attributes     = $this->replaceable       ?? [];
-        $prefix         = $this->replaceablePrefix ?? '';
-        $replaceable    = [];
+        $attributes = $this->replaceable ?? [];
+        $prefix = $this->replaceablePrefix ?? '';
+        $replaceable = [];
 
-        foreach ($attributes as $attribute)
-        {
+        foreach ($attributes as $attribute) {
             $replaceable[strtoupper($prefix . $attribute)] = $this[$attribute] ?? null;
         }
 
         return $replaceable;
     }
-    
+
 }

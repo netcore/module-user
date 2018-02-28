@@ -2,7 +2,8 @@
 
 namespace Modules\User\Traits;
 
-trait ModuleUser {
+trait ModuleUser
+{
 
     /**
      * Set "fullName" attribute on model

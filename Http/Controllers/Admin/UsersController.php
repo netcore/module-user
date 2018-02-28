@@ -42,9 +42,7 @@ class UsersController extends Controller
 
         $this->config = array_merge($this->config, $fromConfig);
 
-        $this->model = app(
-            config('auth.providers.users.model')
-        );
+        $this->model = app(config('auth.providers.users.model'));
     }
 
     /**

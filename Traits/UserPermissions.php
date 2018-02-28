@@ -16,7 +16,7 @@ trait UserPermissions
     {
         $module = Module::find('Permission');
 
-        if (! $module || !$module->enabled()) {
+        if (!$module || !$module->enabled()) {
             return (object)[
                 'levels' => collect()
             ];
@@ -34,8 +34,6 @@ trait UserPermissions
     }
 
     /**
-     *
-     *
      * @param Request $request
      * @return bool
      * @internal param $name
@@ -61,7 +59,7 @@ trait UserPermissions
             if (!$levels->count() && !$user->isAdmin()) {
                 return false;
             }
-            
+
             foreach ($levels as $level) {
                 foreach ($level->routes as $route) {
                     if ($route->route) {
