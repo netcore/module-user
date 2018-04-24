@@ -53,17 +53,16 @@ class UserDatabaseSeeder extends Seeder
                 if ($state) {
                     foreach ($keys as $key) {
                         $settings[] = [
-                            [
-                                'group' => 'oauth',
-                                'key'   => $provider . $key,
-                                'name'  => ucfirst($provider) . ' ' . str_replace('_', ' ', $key),
-                                'type'  => 'text',
-                            ]
+                            'group' => 'oauth',
+                            'key'   => $provider . $key,
+                            'name'  => ucfirst($provider) . ' ' . str_replace('_', ' ', $key),
+                            'type'  => 'text',
                         ];
                     }
 
                 }
             }
+
             setting()->seed($settings);
         }
 
